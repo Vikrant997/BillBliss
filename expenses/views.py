@@ -48,6 +48,7 @@ def add_expense(request):
 
         return redirect('expenses')
 
+
 def expense_edit(request, id):
     expense = Expense.objects.get(pk=id)
     categories = Category.objects.all()
