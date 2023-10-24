@@ -83,6 +83,7 @@ def expense_edit(request, id):
 
         return redirect('expenses')
 
+
 def delete_expense(request, id):
     expense = Expense.objects.get(pk=id)
     expense.delete()
