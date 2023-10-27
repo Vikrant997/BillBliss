@@ -4,8 +4,8 @@ import json
 from django.conf import settings
 from .models import UserPreference
 from django.contrib import messages
-
 # Create your views here.
+
 
 def index(request):
     currency_data = []
@@ -22,7 +22,8 @@ def index(request):
         user_preferences = UserPreference.objects.get(user=request.user)
     if request.method == 'GET':
 
-        return render(request, 'preferences/index.html', {'currencies': currency_data, 'user_preferences': user_preferences})
+        return render(request, 'preferences/index.html', {'currencies': currency_data,
+                                                          'user_preferences': user_preferences})
     else:
 
         currency = request.POST['currency']
