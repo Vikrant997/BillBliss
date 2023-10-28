@@ -10,6 +10,8 @@ django-heroku = "*"
 gunicorn = "*"
 validate-email = "*"
 six = "*"
+xlwt = "*"
+weasyprint = "*"
 
 [dev-packages]
 
