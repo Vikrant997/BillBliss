@@ -40,10 +40,12 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
     currency = UserPreference.objects.get(user=request.user).currency
+    budget = UserPreference.objects.get(user=request.user).budget
     context = {
         'expenses': expenses,
         'page_obj': page_obj,
-        'currency': currency
+        'currency': currency,
+        'budget': budget
     }
     return render(request, 'expenses/index.html', context)
 
@@ -53,7 +55,7 @@ def add_expense(request):
     categories = Category.objects.all()
     context = {
         'categories': categories,
-        'values': request.POST
+        'values': request.POST,
     }
     if request.method == 'GET':
         return render(request, 'expenses/add_expense.html', context)
@@ -67,6 +69,7 @@ def add_expense(request):
         description = request.POST['description']
         date = request.POST['expense_date']
         category = request.POST['category']
+        
 
         if not description:
             messages.error(request, 'description is required')
@@ -76,8 +79,19 @@ def add_expense(request):
                                category=category, description=description)
         messages.success(request, 'Expense saved successfully')
 
+        # Check if total expenses exceed the budget
+        total_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
+        if total_expenses is not None and total_expenses > UserPreference.objects.get(user=request.user).budget:
+            # Send a notification (you'll need to implement this part)
+            send_notification(request.user, f"Total expenses ({total_expenses}) exceed the budget ({UserPreference.objects.get(user=request.user).budget})!")
+
+
         return redirect('expenses')
 
+# This is a placeholder for the notification function. You'll need to implement it based on your notification system.
+def send_notification(user, message):
+    # Implement your notification logic here
+    pass
 
 @login_required(login_url='/authentication/login')
 def expense_edit(request, id):
