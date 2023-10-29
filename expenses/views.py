@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
 from django.db.models import Sum
+import os
 
 
 def search_expenses(request):
@@ -206,8 +207,8 @@ def export_pdf(request):
     with tempfile.NamedTemporaryFile(delete = True) as output:
         output.write(result)
         output.flush()
-
-        output = open(output.name, 'rb')
+        output.seek(0)
+       
         response.write(output.read())
     
     return response
