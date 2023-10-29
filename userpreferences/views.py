@@ -9,6 +9,7 @@ from django.contrib import messages
 
 def index(request):
     currency_data = []
+    budget = 0
     file_path = os.path.join(settings.BASE_DIR, 'currencies.json')
 
     with open(file_path, 'r') as json_file:
@@ -23,14 +24,21 @@ def index(request):
     if request.method == 'GET':
 
         return render(request, 'preferences/index.html', {'currencies': currency_data,
-                                                          'user_preferences': user_preferences})
+                                                          'user_preferences': user_preferences, 'budget': budget})
     else:
 
         currency = request.POST['currency']
+        budget = request.POST['budget']
+
+        if not budget:
+            messages.error(request, 'Budget is required')
+            return render(request, 'preferences/index.html', {'currencies': currency_data,
+                                                          'user_preferences': user_preferences, 'budget': budget})
         if exists:
             user_preferences.currency = currency
+            user_preferences.budget = budget
             user_preferences.save()
         else:
-            UserPreference.objects.create(user=request.user, currency=currency)
+            UserPreference.objects.create(user=request.user, currency=currency, budget=budget)
         messages.success(request, 'Changes saved')
-        return render(request, 'preferences/index.html', {'currencies': currency_data, 'user_preferences': user_preferences})
+        return render(request, 'preferences/index.html', {'currencies': currency_data, 'user_preferences': user_preferences, 'budget': budget})

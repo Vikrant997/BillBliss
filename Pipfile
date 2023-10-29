@@ -12,6 +12,7 @@ validate-email = "*"
 six = "*"
 xlwt = "*"
 weasyprint = "*"
+django-translation-manager = "*"
 
 [dev-packages]
 

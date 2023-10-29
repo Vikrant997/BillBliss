@@ -1,31 +1,49 @@
-{% extends 'base.html'%} {% block content %}
+{% extends 'base.html' %}
 
+{% block content %}
 <div class="container mt-3">
-  <h5>Preferred Currency</h5>
+  <h5>Preferred Currency and Budget</h5>
   {% include 'partials/_messages.html' %}
-  <form action="{% url 'preferences'%}" method="post">
+
+  <form action="{% url 'preferences' %}" method="post">
     {% csrf_token %}
-    <div class="input-group">
-      <select name="currency" class="custom-select" id="inputGroupSelect04">
-        {% if user_preferences.currency%}
-        <option name="currency" selected value="{{user_preferences.currency}}"
-          >{{user_preferences.currency}}</option
-        >
-        {% endif %} {% for currency in currencies %}
+    
+    <div class="form-row align-items-center">
+      <div class="col-auto">
+        <label for="currency" class="sr-only">Currency</label>
+        <select name="currency" class="custom-select" id="inputGroupSelect04">
+          {% if user_preferences.currency %}
+            <option selected value="{{ user_preferences.currency }}">
+              {{ user_preferences.currency }}
+            </option>
+          {% endif %}
+          {% for currency in currencies %}
+            <option value="{{ currency.name }} - {{ currency.value }}">
+              {{ currency.name }} - {{ currency.value }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
 
-        <option name="currency" value="{{currency.name}} - {{currency.value}}"
-          >{{currency.name}} - {{currency.value}}
-        </option>
+      <div class="col-auto ml-2">
+        <label for="budget" class="sr-only">Budget</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          id="budget"
+          name="budget"
+          placeholder="Budget"
+          value="{{ user_preferences.budget }}"
+        />
+      </div>
+     
 
-        {% endfor %}
-      </select>
-      <div class="input-group-append">
-        <input class="btn btn-outline-secondary" type="submit" value="Save" />
+      <div class="col-auto ml-2">
+        <button type="submit" class="btn btn-outline-secondary">Save</button>
       </div>
     </div>
   </form>
+
+  <hr />
 </div>
-
-<hr />
-
 {% endblock %}

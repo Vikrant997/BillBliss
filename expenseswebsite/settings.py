@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'expenses',
     'userpreferences'
+   # 'translation_manager'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django.middleware.locale.LocaleMiddleware'
 ]
 
 ROOT_URLCONF = 'expenseswebsite.urls'
@@ -117,6 +121,23 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+LANGUAGES = [
+    
+    ('en', _('English')),
+    ('sv', _('Swedish'))
+]
+
+#USE_L10N = True
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
+
+CONFIG = {
+    'potion.gettext.settings': {
+        'path': '/C:/Program Files/gettext/bin'
+    }
+}
 
 
 # Static files (CSS, JavaScript, Images)

@@ -18,6 +18,8 @@ from django.db.models import Sum
 import os
 
 
+
+
 def search_expenses(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
