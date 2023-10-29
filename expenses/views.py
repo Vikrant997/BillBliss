@@ -17,7 +17,10 @@ import tempfile
 from django.db.models import Sum
 import os
 
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
 
 
 def search_expenses(request):
@@ -77,21 +80,32 @@ def add_expense(request):
 
         Expense.objects.create(owner=request.user, amount=amount, date=date,
                                category=category, description=description)
-        messages.success(request, 'Expense saved successfully')
+        
 
         # Check if total expenses exceed the budget
         total_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
         if total_expenses is not None and total_expenses > UserPreference.objects.get(user=request.user).budget:
-            # Send a notification (you'll need to implement this part)
-            send_notification(request.user, f"Total expenses ({total_expenses}) exceed the budget ({UserPreference.objects.get(user=request.user).budget})!")
+            # Send email notification
+            send_notification_email(request.user, total_expenses, UserPreference.objects.get(user=request.user).budget)
 
+            # Add a message to the messages framework
+            messages.warning(request, f"Total expenses ({total_expenses}) exceed the budget ({UserPreference.objects.get(user=request.user).budget})!")
 
+        messages.success(request, 'Expense saved successfully')
         return redirect('expenses')
 
 # This is a placeholder for the notification function. You'll need to implement it based on your notification system.
-def send_notification(user, message):
+def send_notification_email(user, total_expenses, budget):
     # Implement your notification logic here
-    pass
+    subject = 'Expense Notification'
+    html_message = render_to_string('expenses/notification_email.html', {'total_expenses': total_expenses, 'budget': budget})
+    plain_message = strip_tags(html_message)
+    from_email = 'viki99viki@gmail.com'  # Replace with your email
+    recipient_list = [user.email]
+
+    email = EmailMultiAlternatives(subject, plain_message, from_email, recipient_list)
+    email.attach_alternative(mark_safe(html_message), "text/html")
+    email.send()
 
 @login_required(login_url='/authentication/login')
 def expense_edit(request, id):
