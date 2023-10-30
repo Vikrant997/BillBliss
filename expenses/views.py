@@ -21,6 +21,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
 
 
 def search_expenses(request):
@@ -93,6 +94,16 @@ def add_expense(request):
 
         messages.success(request, 'Expense saved successfully')
         return redirect('expenses')
+
+
+@csrf_exempt  # Only for demonstration. Consider using CSRF protection in production.
+def check_budget_status(request):
+    total_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
+    budget_exceeded = total_expenses is not None and total_expenses > UserPreference.objects.get(user=request.user).budget
+
+    return JsonResponse({
+        'budget_exceeded': budget_exceeded,
+    })   
 
 # This is a placeholder for the notification function. You'll need to implement it based on your notification system.
 def send_notification_email(user, total_expenses, budget):

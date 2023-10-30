@@ -26,7 +26,11 @@
 
   <div class="container">
     {% include 'partials/_messages.html' %} {% if expenses.count %}
-
+<div id="budget-exceeded-message" {% if not budget_exceeded %}style="display: none;"{% endif %}>
+    <div class="alert alert-warning" role="alert">
+      Warning: Total expenses exceed the budget!
+    </div>
+  </div>
     <div class="row">
       <div class="col-md-8">
 
@@ -131,6 +135,41 @@
 
 
 </script>
+<!-- templates/expenses/index.html -->
+<script>
+  function checkBudgetStatus() {
+    fetch('{% url "check_budget_status" %}')
+      .then(response => response.json())
+      .then(data => {
+        var budgetExceededMessage = document.getElementById('budget-exceeded-message');
+
+        if (data.budget_exceeded) {
+          budgetExceededMessage.style.display = 'block';
+          localStorage.setItem('budgetExceeded', 'true');
+        } else {
+          budgetExceededMessage.style.display = 'none';
+          localStorage.setItem('budgetExceeded', 'false');
+        }
+      })
+      .catch(error => {
+        console.error('Error checking budget status:', error);
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check budget status initially
+    var budgetExceeded = localStorage.getItem('budgetExceeded') === 'true';
+
+    if (budgetExceeded) {
+      var budgetExceededMessage = document.getElementById('budget-exceeded-message');
+      budgetExceededMessage.style.display = 'block';
+    }
+
+    // Periodically check budget status (every 5 seconds in this example)
+    setInterval(checkBudgetStatus, 5000);
+  });
+</script>
+
 
 
 
