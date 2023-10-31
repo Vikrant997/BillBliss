@@ -56,11 +56,13 @@ def index(request):
 
 @login_required(login_url='/authentication/login')
 def add_expense(request):
+
     categories = Category.objects.all()
     context = {
         'categories': categories,
         'values': request.POST,
     }
+
     if request.method == 'GET':
         return render(request, 'expenses/add_expense.html', context)
 
@@ -79,17 +81,18 @@ def add_expense(request):
             messages.error(request, 'description is required')
             return render(request, 'expenses/add_expense.html', context)
 
+        
         Expense.objects.create(owner=request.user, amount=amount, date=date,
                                category=category, description=description)
         
 
-        # Check if total expenses exceed the budget
+        
         total_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
+
         if total_expenses is not None and total_expenses > UserPreference.objects.get(user=request.user).budget:
+
             # Send email notification
             send_notification_email(request.user, total_expenses, UserPreference.objects.get(user=request.user).budget)
-
-            # Add a message to the messages framework
             messages.warning(request, f"Total expenses ({total_expenses}) exceed the budget ({UserPreference.objects.get(user=request.user).budget})!")
 
         messages.success(request, 'Expense saved successfully')
@@ -97,10 +100,16 @@ def add_expense(request):
 
 
 @csrf_exempt  # Only for demonstration. Consider using CSRF protection in production.
+
 def check_budget_status(request):
+
+   
     total_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
+
+    
     budget_exceeded = total_expenses is not None and total_expenses > UserPreference.objects.get(user=request.user).budget
 
+    
     return JsonResponse({
         'budget_exceeded': budget_exceeded,
     })   

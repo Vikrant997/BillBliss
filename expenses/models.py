@@ -4,7 +4,6 @@ from django.utils.timezone import now
 
 # Create your models here.
 
-
 class Expense(models.Model):
     amount = models.FloatField()
     date = models.DateField(default=now)
@@ -17,7 +16,6 @@ class Expense(models.Model):
 
     class Meta:
         ordering: ['-date']
-
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
