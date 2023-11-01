@@ -1,3 +1,4 @@
+// for drawing doughnut chart, included inside expenses/stats.html
 const renderChart = (data, labels) => {
   var ctx = document.getElementById("myChart").getContext("2d");
   var myChart = new Chart(ctx, {
