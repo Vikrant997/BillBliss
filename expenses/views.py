@@ -267,37 +267,57 @@ def expense_category_summary(request):
 def stats_view(request):
     return render(request, 'expenses/stats.html')
 
+# generates a CSV file containing information about expenses and returns it as a downloadable file
 def export_csv(request):
+
+    # creates an HttpResponse object with the content type set to 'text/csv' to indicate that the response will contain CSV data
     response = HttpResponse(content_type = 'text/csv')
+
+    # sets the Content-Disposition header to specify the filename of the downloadable file
     response['Content-Disposition'] = 'attachment; filename=Expenses' + str(datetime.datetime.now()) + '.csv'
 
+    # creates a csv.writer object associated with the response and writes the header row to the CSV file
     writer = csv.writer(response)
     writer.writerow(['Amount', 'Description', 'Category', 'Date'])
 
+    # retrieves expenses filtered by the current user
     expenses = Expense.objects.filter(owner = request.user)
 
+    # iterates through the expenses and writes each expense's amount, description, category, and date to the CSV file
     for expense in expenses:
         writer.writerow([expense.amount, expense.description, expense.category, expense.date])
     
+    # it returns the response, which contains the generated CSV data. 
+    # The user's browser will prompt the user to download the file with the specified filename
     return response
 
 
+# generates an Excel (xls) file
 def export_excel(request):
+
+    # creates an HttpResponse object with the content type set to 'application/ms-excel' to indicate that the response will contain Excel data
     response = HttpResponse(content_type = 'application/ms-excel')
+
+    # sets the Content-Disposition header to specify the filename of the downloadable file
     response['Content-Disposition'] = 'attachment; filename=Expenses' + str(datetime.datetime.now()) + '.xls'
 
+    # creates an Excel workbook (xlwt.Workbook), adds a sheet named 'Expenses' (wb.add_sheet), 
+    # and initializes variables for row number and font style
     wb = xlwt.Workbook(encoding = 'utf-8')
     ws = wb.add_sheet('Expenses')
     row_num = 0
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
+    # defines the column headers and writes them to the Excel file
     columns = [['Amount', 'Description', 'Category', 'Date']]
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
 
     font_style = xlwt.XFStyle()
+
+    # retrieves expense data for the current user and writes each row of data to the Excel file
     rows = Expense.objects.filter(owner = request.user).values_list('amount', 'description', 'category', 'date')
 
     for row in rows:
@@ -305,28 +325,39 @@ def export_excel(request):
 
         for col_num in range(len(row)):
             ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+    # saves the workbook to the response, making it available for download, and returns the response
     wb.save(response)
 
     return response
 
-
+#  generates a PDF file containing information about expenses and returns it as an inline downloadable file
 def export_pdf(request):
+
+    # creates an HttpResponse object with the content type set to 'application/pdf' to indicate that the response will contain PDF data
     response = HttpResponse(content_type = 'application/pdf')
+
+    # sets the Content-Disposition header to specify the filename of the downloadable file
     response['Content-Disposition'] = 'inline; attachment; filename=Expenses' + str(datetime.datetime.now()) + '.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
 
+    # retrieves expenses and calculates the sum of the 'amount' field
     expenses = Expense.objects.filter(owner = request.user)
     sum = expenses.aggregate(Sum('amount'))
 
+    # renders an HTML template (pdf-output.html) with expense data and the total amount 
+    # The HTML is then converted to a PDF using the write_pdf method of the HTML class.
     html_string = render_to_string('expenses/pdf-output.html',{'expenses': expenses, 'total': sum['amount__sum']})
     html = HTML(string = html_string)
     result = html.write_pdf()
 
+    # writes the PDF content to a temporary file and then writes the content of the file to the response
     with tempfile.NamedTemporaryFile(delete = True) as output:
         output.write(result)
         output.flush()
         output.seek(0)
        
         response.write(output.read())
-    
+    # it returns the response, which contains the generated PDF data 
+    # The user's browser will prompt the user to download the file with the specified filename
     return response
