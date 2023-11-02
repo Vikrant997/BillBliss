@@ -45,7 +45,7 @@
           </select>
         </div>-->
 
-        <div class="form-group">
+         <div class="form-group">
     <label for="">Category</label>
     <select class="form-control" name="category" id="category-dropdown">
         {% for category in categories %}
@@ -55,7 +55,6 @@
     </select>
     <input type="text" class="form-control mt-2" name="custom_category" id="custom-category-input" style="display: none;">
 </div>
-
 
         <div class="form-group">
           <label for="">Date of Expense</label>
@@ -76,19 +75,6 @@
   </div>
 </div>
  
-<script>
-    // JavaScript to toggle the visibility of the text input based on user selection
-    document.getElementById('category-dropdown').addEventListener('change', function () {
-        var customCategoryInput = document.getElementById('custom-category-input');
-        if (this.value === 'custom') {
-            customCategoryInput.style.display = 'block';
-            customCategoryInput.setAttribute('name', 'category');  // Set the name attribute for form submission
-        } else {
-            customCategoryInput.style.display = 'none';
-            customCategoryInput.removeAttribute('name');  // Remove the name attribute for form submission
-        }
-    });
-</script>
 
 
 {% endblock %}

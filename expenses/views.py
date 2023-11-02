@@ -84,7 +84,6 @@ def index(request):
 @login_required(login_url='/authentication/login')
 def add_expense(request):
 
-    
     # retrieves all categories from the Category model and creates a context dictionary containing these categories and the values
     categories = Category.objects.all()
     context = {
@@ -128,9 +127,6 @@ def add_expense(request):
         # creates a new Expense object in the database with the provided details, associating it with the currently logged-in user
         Expense.objects.create(owner=request.user, amount=amount, date=date,
                                category=category, description=description)
-        
-
-
         
 
         # calculates total expense
