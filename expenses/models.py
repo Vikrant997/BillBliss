@@ -11,6 +11,7 @@ class Expense(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
     category = models.CharField(max_length=266)
+    
 
     # The __str__ method is defined to provide a human-readable string representation of an expense object. 
     # In this case, it returns the category of the expense.

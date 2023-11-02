@@ -84,6 +84,7 @@ def index(request):
 @login_required(login_url='/authentication/login')
 def add_expense(request):
 
+    
     # retrieves all categories from the Category model and creates a context dictionary containing these categories and the values
     categories = Category.objects.all()
     context = {
@@ -112,9 +113,24 @@ def add_expense(request):
             messages.error(request, 'description is required')
             return render(request, 'expenses/add_expense.html', context)
 
+        if not category:
+            messages.error(request, 'Category is required')
+            return render(request, 'expenses/add_expense.html', {'categories': categories})
+
+        # Check if the selected/entered category is a predefined category
+        category, created = Category.objects.get_or_create(name=category)
+
+        # If the category was not predefined and is a new user-defined category,
+        # save it in the database for future use
+        if created:
+            category.save()
+
         # creates a new Expense object in the database with the provided details, associating it with the currently logged-in user
         Expense.objects.create(owner=request.user, amount=amount, date=date,
                                category=category, description=description)
+        
+
+
         
 
         # calculates total expense
