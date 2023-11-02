@@ -210,6 +210,7 @@ def expense_edit(request, id):
         if not description:
             messages.error(request, 'description is required')
             return render(request, 'expenses/edit-expense.html', context)
+        
 
         # updates the expense object with the new values and saves it to the database
         expense.owner = request.user
