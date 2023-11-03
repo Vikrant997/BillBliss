@@ -191,7 +191,7 @@ def expense_edit(request, id):
         'values': expense,
         'categories': categories
     }
-
+    
     # If the request method is 'GET', the view renders the 'expenses/edit-expense.html' template with the provided context
     if request.method == 'GET':
         return render(request, 'expenses/edit-expense.html', context)
@@ -199,24 +199,41 @@ def expense_edit(request, id):
     # view extracts the updated amount, description, date, and category from the submitted form data
     if request.method == 'POST':
         amount = request.POST['amount']
+        print("Values before rendering template:", request.POST)
 
         if not amount:
             messages.error(request, 'Amount is required')
             return render(request, 'expenses/edit-expense.html', context)
         description = request.POST['description']
         date = request.POST['expense_date']
-        category = request.POST['category']
+        #category = request.POST['category']
 
         if not description:
             messages.error(request, 'description is required')
             return render(request, 'expenses/edit-expense.html', context)
         
+        # Extract both the predefined category and the custom category fields
+        category_name = request.POST['category']
+        custom_category_name = request.POST['custom_category']
+        
+        # Check if the selected category is 'custom'
+        if category_name == 'custom' and custom_category_name:
+            
+            # If the category is 'custom' and a custom category is provided, use the custom category
+            category, created = Category.objects.get_or_create(name=custom_category_name)
+            if created:
+                print(f"New category created: {custom_category_name}")
+                category.save()
+
+        else:
+            # If a predefined category is selected, use it
+            category, created = Category.objects.get_or_create(name=category_name)
 
         # updates the expense object with the new values and saves it to the database
         expense.owner = request.user
         expense.amount = amount
         expense. date = date
-        expense.category = category
+        expense.category = category.name
         expense.description = description
 
         expense.save()
