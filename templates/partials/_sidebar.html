@@ -54,12 +54,39 @@
           General
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          <span data-feather="file-text"></span>
-          Account
-        </a>
-      </li>
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Account</span>
+            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
+                <span data-feather="plus-circle"></span>
+            </a>
+        </h6>
+        
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Language</span>
+            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report" >
+                <span class="dropdown-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&#9662;</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="languageDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="dropdown-item" href="#" onclick="changeLanguage('en')">English</a>
+            <a class="dropdown-item" href="#" onclick="changeLanguage('es')">Español</a>
+          </div>
+        </h6>
+
+        
+        
+
+
+
+
     </ul>
   </div>
 </nav>
+
+<script>
+    // Example function for language change (replace it with your actual logic)
+    function changeLanguage(language) {
+        console.log('Switching language to: ' + language);
+        // Add your language-switching logic here
+    }
+</script>
