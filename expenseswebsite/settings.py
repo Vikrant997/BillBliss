@@ -41,20 +41,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'expenses',
-    'userpreferences'
-   # 'translation_manager'
+    'userpreferences',
+    'translation_manager',
+   
+   
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'django.middleware.locale.LocaleMiddleware'
+    
+    
 ]
 
 ROOT_URLCONF = 'expenseswebsite.urls'
@@ -110,7 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SESSION_SAVE_EVERY_REQUEST = True
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -125,12 +131,15 @@ USE_TZ = True
 LANGUAGES = [
     
     ('en', _('English')),
-    ('sv', _('Swedish'))
+    ('sw', _('Swedish'))
 ]
 
-#USE_L10N = True
+
+
+USE_L10N = True
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'expenseswebsite', 'locale'),
 )
 
 CONFIG = {

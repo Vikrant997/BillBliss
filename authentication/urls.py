@@ -1,6 +1,7 @@
 from .views import RegistrationView, UsernameValidationView, EmailValidationView, VerificationView, LoginView, LogoutView, RequestPasswordResetEmail, CompletePasswordReset
-from django.urls import path
+from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
+from django.conf.urls.i18n import i18n_patterns
 
 # configuration file for mapping URLs(mentioned in html files) to views in view.py
 

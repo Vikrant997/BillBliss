@@ -13,6 +13,8 @@ six = "*"
 xlwt = "*"
 weasyprint = "*"
 django-translation-manager = "*"
+popper = "*"
+python-gettext = "*"
 
 [dev-packages]
 

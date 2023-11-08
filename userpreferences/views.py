@@ -4,6 +4,7 @@ import json
 from django.conf import settings
 from .models import UserPreference
 from django.contrib import messages
+from django.utils import translation
 # Create your views here.
 
 # for handling the currency selection and budget 
@@ -12,6 +13,12 @@ def index(request):
     # initializing an empty list currency_data and setting the initial value of budget to 0
     currency_data = []
     budget = 0
+     # Retrieve the user's language preference
+    user_preferences, created = UserPreference.objects.get_or_create(user=request.user)
+    user_language = user_preferences.language if user_preferences.language else 'en'
+
+    # Activate the language for the current request
+    translation.activate(user_language)
 
     # reads data from a JSON file named 'currencies.json' located in the project's base directory
     # The data is loaded into the currency_data list as dictionaries containing 'name' and 'value' keys.

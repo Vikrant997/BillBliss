@@ -1,13 +1,16 @@
-{% extends 'base.html' %} {% block content %}
-
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<head><script src="{% static 'js/language.js' %}"></script></head>
 <div class="container mt-4">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="{% url 'expenses'%}">Expenses</a>
+        <a href="{% url 'expenses'%}">{% trans "Expenses" %}</a>
         
       </li>
-      <li class="breadcrumb-item active" aria-current="page">Add Expenses</li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans "Add Expenses" %}</li>
     </ol>
   </nav>
 
@@ -16,7 +19,7 @@
       <form action="{% url 'add-expenses' %}" method="post">
         {% include 'partials/_messages.html'%} {% csrf_token %}
         <div class="form-group">
-          <label for="">Amount</label>
+          <label for="">{% trans "Amount" %}</label>
           <input
             type="text"
             class="form-control form-control-sm"
@@ -25,7 +28,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="">Description</label>
+          <label for="">{% trans "Description" %}</label>
           <input
             type="text"
             class="form-control form-control-sm"
@@ -46,18 +49,18 @@
         </div>-->
 
         <div class="form-group">
-    <label for="">Category</label>
+    <label for="">{% trans "Category" %}</label>
     <select class="form-control" name="category" id="category-dropdown">
         {% for category in categories %}
             <option value="{{ category.name }}">{{ category.name }}</option>
         {% endfor %}
-        <option value="custom">Enter Custom Category</option>
+        <option value="custom">{% trans "Enter Custom Category" %}</option>
     </select>
     <input type="text" class="form-control mt-2" name="custom_category" id="custom-category-input" style="display: none;">
 </div>
 
         <div class="form-group">
-          <label for="">Date of Expense</label>
+          <label for="">{% trans "Date of Expense" %}</label>
           <input
             type="date"
             class="form-control form-control-sm"
@@ -67,7 +70,7 @@
 
         <input
           type="submit"
-          value="Submit"
+          value='{% trans "Submit" %}'
           class="btn btn-primary btn-primary-sm"
         />
       </form>
@@ -87,6 +90,7 @@
             customCategoryInput.removeAttribute('name');  // Remove the name attribute for form submission
         }
     });
+
 </script>
 
 

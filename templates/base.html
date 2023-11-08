@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>BillBliss {% block title %} {% endblock %}</title>
+    <title>{% trans "BillBliss" %}{% block title %} {% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
@@ -22,7 +23,7 @@
 
 <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">BillBliss</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">{% trans "BillBliss" %}</a>
 
         <ul class="navbar-nav px-3" style="display: flex; flex-direction: row; align-items: center;">
             <li class="nav-item text-nowrap">
@@ -34,7 +35,7 @@
             <li class="nav-item text-nowrap mt-3 ml-2">
                 <form action="{% url 'logout' %}" method="POST">
                     {% csrf_token %}
-                    <input class="text text-capitalize" type="submit" value="Sign out" />
+                    <input class="text text-capitalize" type="submit" value='{% trans "Sign out" %}' />
                 </form>
             </li>
         </ul>
@@ -53,6 +54,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    
 
    
 

@@ -22,6 +22,13 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import translation
+from django.utils.translation import activate, get_language
+import logging
+from django.db.models import F
+from django.db.models.functions import Coalesce
+
+
 
 # This view is designed to respond to POST requests. It checks if the incoming request method is 'POST' before proceeding with the search.
 def search_expenses(request):
@@ -51,13 +58,18 @@ def search_expenses(request):
 # responsible for rendering the main expenses page, displaying a list of expenses along with some additional information
 @login_required(login_url='/authentication/login')
 def index(request):
-
+    
     # retrieves all the categories from the Category model
     categories = Category.objects.all()
 
     # filters expenses based on the currently logged-in user
     # model has a field named owner that references the user who created the expense
     expenses = Expense.objects.filter(owner=request.user)
+
+
+    order_option = request.GET.get('orderOption', 'date_increasing') 
+    # Apply filtering and ordering to the expenses
+    expenses = filter_and_order_expenses(expenses, order_option)
 
     # It sets up pagination for the expenses. It uses the Paginator class to paginate the expenses, displaying 5 expenses per page. 
     # The current page number is extracted from the request's GET parameters.
@@ -66,8 +78,13 @@ def index(request):
     page_obj = Paginator.get_page(paginator, page_number)
 
     # retrieves the user's currency and budget preferences from the UserPreference model
-    currency = UserPreference.objects.get(user=request.user).currency
-    budget = UserPreference.objects.get(user=request.user).budget
+    currency = UserPreference.objects.filter(user=request.user).first()
+    if currency:
+        currency = currency.currency
+    budget = UserPreference.objects.filter(user=request.user).first()
+    if budget:
+        budget = budget.budget
+    
 
     # creates a context dictionary containing the expenses, the paginated page object, the user's currency preference, and the budget
     context = {
@@ -79,6 +96,27 @@ def index(request):
 
     # renders the 'expenses/index.html' template with the provided context
     return render(request, 'expenses/index.html', context)
+
+
+def filter_and_order_expenses(queryset, order_option):
+    # Define a dictionary to map order options to corresponding fields in the Expense model
+    order_mapping = {
+        'amount_increasing': 'amount',
+        'amount_decreasing': '-amount',
+        'date_increasing': 'date',
+        'date_decreasing': '-date',
+        'category_increasing': 'category',
+        'category_decreasing': '-category',
+        # Add more options as needed
+    }
+    
+    # Apply ordering based on the order option
+    if order_option:
+        queryset = queryset.order_by(order_mapping.get(order_option, 'date'))
+
+    return queryset
+
+
 
 
 @login_required(login_url='/authentication/login')
@@ -391,3 +429,74 @@ def export_pdf(request):
     # it returns the response, which contains the generated PDF data 
     # The user's browser will prompt the user to download the file with the specified filename
     return response
+
+from django.http import HttpResponseNotAllowed
+
+from django.http import JsonResponse
+from django.utils import translation
+
+ 
+@login_required
+def change_language(request):
+    language = request.POST.get('language', request.GET.get('language', ''))
+    
+    print(f'Received language: {language}')  # for debugging
+    response_data = {}
+
+    if language == 'sw' or language == 'en':
+        request.session['django_language'] = language
+        response_data = {
+            'status': 'success',
+            'message': 'Language changed successfully'
+        }
+        translation.activate(language)
+        print(f'Current language: {translation.get_language()}')  # for debugging
+    else:
+        response_data = {
+            'status': 'error',
+            'message': 'Invalid language'
+        }
+        print(f'Invalid language: {language}')  # for debugging
+
+    return render(request, "expenses/index.html")
+
+
+
+
+
+"""
+@csrf_exempt
+def filter_expenses(request):
+    if request.method == 'POST':
+        # Extracts the filter option and search text from the JSON data in the request body
+        data = json.loads(request.body)
+        filter_option = data.get('filterOption')
+        search_str = data.get('searchText')
+        order_option = data.get('orderOption')
+
+        # Define a dictionary to map filter options to corresponding fields in the Expense model
+        filter_mapping = {
+            'amount': 'amount__istartswith',
+            'date': 'date__istartswith',
+            'description': 'description__icontains',
+            'category': 'category__icontains',
+            # Add more options as needed
+        }
+
+        # Perform the filtering based on the selected filter option
+        expenses = Expense.objects.filter(
+            **{filter_mapping.get(filter_option, 'date__istartswith'): search_str},
+            owner=request.user
+        )
+
+        # Apply ordering based on the order option
+        if order_option == 'increasing':
+            expenses = expenses.order_by(Coalesce(F(filter_option), Value('')))
+        elif order_option == 'decreasing':
+            expenses = expenses.order_by(Coalesce(F(filter_option).desc(), Value('')))
+
+        # Retrieve the values of the filtered expenses
+        data = expenses.values()
+
+        # Convert the QuerySet of dictionaries into a JSON response
+        return JsonResponse(list(data), safe=False)"""

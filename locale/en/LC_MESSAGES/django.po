@@ -23,8 +23,123 @@ msgstr ""
 
 #: .\expenseswebsite\settings.py:127
 msgid "English"
-msgstr ""
+msgstr "English"
 
 #: .\expenseswebsite\settings.py:128
 msgid "Swedish"
-msgstr ""
+msgstr "svenska"
+
+#: .templates\partials\_sidebar.html
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Expenses"
+msgstr "Expenses"
+
+msgid "Expenses Summary"
+msgstr "Expenses Summary"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "General"
+msgstr "General"
+
+msgid "Languages"
+msgstr "Languages"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "BillBliss"
+msgstr "BillBliss"
+
+msgid "Sign out"
+msgstr "Sign out"
+
+msgid "Preferred Currency and Budget"
+msgstr "Preferred Currency and Budget"
+
+msgid "Currency"
+msgstr "Currency"
+
+msgid "Budget"
+msgstr "Budget"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Add Expenses"
+msgstr "Add Expenses"
+
+msgid "Amount"
+msgstr "Amount"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Enter Custom Category"
+msgstr "Enter Custom Category"
+
+msgid "Date of Expense"
+msgstr "Date of Expense"
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Edit Expense"
+msgstr "Edit Expense"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Select Category"
+msgstr "Select Category"
+
+msgid "My Expenses"
+msgstr "My Expenses"
+
+msgid "Warning: Total expenses exceed the budget!"
+msgstr "Warning: Total expenses exceed the budget!"
+
+msgid "Export PDF"
+msgstr "Export PDF"
+
+msgid "Export Excel"
+msgstr "Export Excel"
+
+msgid "Export CSV"
+msgstr "Export CSV"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "No results"
+msgstr "No results"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Expense Notification"
+msgstr "Expense Notification"
+
+msgid "PDF Output"
+msgstr "PDF Output"
+
+msgid "Expense List"
+msgstr "Expense List"
+
+msgid "No."
+msgstr "No."
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Add Expense"
+msgstr "Add Expense"

@@ -23,8 +23,123 @@ msgstr ""
 
 #: .\expenseswebsite\settings.py:127
 msgid "English"
-msgstr ""
+msgstr "engelsk"
 
 #: .\expenseswebsite\settings.py:128
 msgid "Swedish"
-msgstr ""
+msgstr "svenska"
+
+#: .templates\partials\_sidebar.html
+msgid "Dashboard"
+msgstr "instrumentbräda"
+
+msgid "Expenses"
+msgstr "Utgifter"
+
+msgid "Expenses Summary"
+msgstr "Kostnadssammanfattning"
+
+msgid "Settings"
+msgstr "inställningar"
+
+msgid "General"
+msgstr "Allmän"
+
+msgid "Languages"
+msgstr "språk"
+
+msgid "Category"
+msgstr "Kategori"
+
+msgid "BillBliss"
+msgstr "BillBliss"
+
+msgid "Sign out"
+msgstr "Logga ut"
+
+msgid "Preferred Currency and Budget"
+msgstr "Önskad valuta och budget"
+
+msgid "Currency"
+msgstr "Valuta"
+
+msgid "Budget"
+msgstr "Budget"
+
+msgid "Save"
+msgstr "Spara"
+
+msgid "Add Expenses"
+msgstr "Lägg till kostnader"
+
+msgid "Amount"
+msgstr "Belopp"
+
+msgid "Description"
+msgstr "Beskrivning"
+
+msgid "Enter Custom Category"
+msgstr "Ange anpassad kategori"
+
+msgid "Date of Expense"
+msgstr "Datum för utgift"
+
+msgid "Submit"
+msgstr "Skicka in"
+
+msgid "Edit Expense"
+msgstr "Redigera kostnad"
+
+msgid "Delete"
+msgstr "Radera"
+
+msgid "Select Category"
+msgstr "Välj kategori"
+
+msgid "My Expenses"
+msgstr "Mina utgifter"
+
+msgid "Warning: Total expenses exceed the budget!"
+msgstr "Varning: Totala utgifter överstiger budgeten!"
+
+msgid "Export PDF"
+msgstr "Exportera PDF"
+
+msgid "Export Excel"
+msgstr "Exportera Excel"
+
+msgid "Export CSV"
+msgstr "Exportera CSV"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "No results"
+msgstr "Inga resultat"
+
+msgid "Previous"
+msgstr "Tidigare"
+
+msgid "Next"
+msgstr "Nästa"
+
+msgid "Expense Notification"
+msgstr "Kostnadsanmälan"
+
+msgid "PDF Output"
+msgstr "PDF-utdata"
+
+msgid "Expense List"
+msgstr "Utgiftslista"
+
+msgid "No."
+msgstr "Nej."
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Add Expense"
+msgstr "Lägg till kostnad"

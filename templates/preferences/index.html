@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <div class="container mt-3">
-  <h5>Preferred Currency and Budget</h5>
+  <h5>{% trans "Preferred Currency and Budget" %}</h5>
   {% include 'partials/_messages.html' %}
 
   <form action="{% url 'preferences' %}" method="post">
@@ -10,7 +11,7 @@
     
     <div class="form-row align-items-center">
       <div class="col-auto">
-        <label for="currency" class="sr-only">Currency</label>
+        <label for="currency" class="sr-only">{% trans "Currency" %}</label>
         <select name="currency" class="custom-select" id="inputGroupSelect04">
           {% if user_preferences.currency %}
             <option selected value="{{ user_preferences.currency }}">
@@ -26,7 +27,7 @@
       </div>
 
       <div class="col-auto ml-2">
-        <label for="budget" class="sr-only">Budget</label>
+        <label for="budget" class="sr-only">{% trans "Budget" %}</label>
         <input
           type="text"
           class="form-control form-control-sm"
@@ -39,11 +40,86 @@
      
 
       <div class="col-auto ml-2">
-        <button type="submit" class="btn btn-outline-secondary">Save</button>
+        <button type="submit" class="btn btn-outline-secondary">{% trans "Save" %}</button>
       </div>
     </div>
   </form>
 
   <hr />
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Read user's language preference from the hidden input
+    const userLanguageInput = document.getElementById('userLanguage');
+    const userLanguage = userLanguageInput ? userLanguageInput.value : 'en';
+
+    // Initialize language switcher with the user's language
+    setLanguageActive(userLanguage);
+
+    // Function to handle language change
+    function changeLanguage(language) {
+        console.log('Selected language:', language);
+
+        const formData = new FormData();
+        formData.append('language', language);
+        const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        const url = '{% url "change_language" %}?language=' + language;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken,
+            },
+            body: formData,
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Language change response:', data);
+            // Add a delay of 1 second (1000 milliseconds) before reloading the page
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        })
+        .catch(error => {
+            console.error('Error changing language:', error);
+        });
+    }
+
+    // Function to set the active language link
+    function setLanguageActive(language) {
+        const enLink = document.getElementById('changeLanguageen');
+        const swLink = document.getElementById('changeLanguagesw');
+
+        // Remove 'active' class from all links
+        enLink.classList.remove('active');
+        swLink.classList.remove('active');
+
+        // Add 'active' class to the selected language link
+        if (language === 'en') {
+            enLink.classList.add('active');
+        } else if (language === 'sw') {
+            swLink.classList.add('active');
+        }
+    }
+
+    // Example: Add click event listeners to your language links
+    document.getElementById('changeLanguageen').addEventListener('click', function() {
+        changeLanguage('en');
+        setLanguageActive('en');
+    });
+
+    document.getElementById('changeLanguagesw').addEventListener('click', function() {
+        changeLanguage('sw');
+        setLanguageActive('sw');
+    });
+});
+</script>
+
+
 {% endblock %}

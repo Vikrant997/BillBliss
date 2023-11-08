@@ -1,12 +1,13 @@
-{% extends 'admin/base.html' %} {%load static%} {% block branding %}
+{% extends 'admin/base.html' %} {%load static%} {% load i18n %} {% block branding %}
 
 <h1 id="head">
   <img src="{% static 'img/logo.png' %}" width="35" height="35" />
-  BillBliss
+  {% trans "BillBliss" %}
 </h1>
 
 {% endblock %} {% block extrastyle%}
 
 <link rel="stylesheet" href="{% static 'css/adminstyle.css'%}" />
+
 
 {%endblock %}

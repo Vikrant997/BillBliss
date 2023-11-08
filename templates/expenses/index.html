@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 
@@ -10,17 +11,17 @@
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="">Expenses</a>
+            <a href="">{% trans "Expenses" %}</a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
-            My Expenses
+            {% trans "My Expenses" %}
           </li>
         </ol>
       </nav>
     </div>
 
     <div class="col-md-2">
-      <a href="{% url 'add-expenses'%}" class="btn btn-primary">Add Expense</a>
+      <a href="{% url 'add-expenses'%}" class="btn btn-primary">{% trans "Add Expense" %}</a>
     </div>
   </div>
 
@@ -28,19 +29,37 @@
     {% include 'partials/_messages.html' %} {% if expenses.count %}
 <div id="budget-exceeded-message" {% if not budget_exceeded %}style="display: none;"{% endif %}>
     <div class="alert alert-warning" role="alert">
-      Warning: Total expenses exceed the budget!
+      {% trans "Warning: Total expenses exceed the budget!" %}
     </div>
   </div>
     <div class="row">
       <div class="col-md-8">
 
-
+ <div class="col-md-3 text-left">
+    <form method="get" action="{% url 'index' %}" id="sortingForm">
+    <div class="form-group">
+        <label for="orderOption">{% trans "Order by:" %}</label>
+        <select class="form-control" id="orderOption" name="orderOption">
+            <!-- Add options for increasing and decreasing -->
+            <option value="amount_increasing">{% trans "Amount Increasing" %}</option>
+            <option value="amount_decreasing">{% trans "Amount Decreasing" %}</option>
+            <option value="date_increasing" selected>{% trans "Date Increasing" %}</option>
+            <option value="date_decreasing">{% trans "Date Decreasing" %}</option>
+            <option value="category_increasing">{% trans "Category Increasing" %}</option>
+            <option value="category_decreasing">{% trans "Category Decreasing" %}</option>
+        </select>
+    </div>
+</form> 
+</div>
 
       </div>
+
+      
       <div class="col-md-4">
-        <a href="{% url 'export-pdf' %}" class="btn btn-primary">Export PDF</a>
-        <a href="{% url 'export-excel' %}" class="btn btn-primary">Export Excel</a>
-        <a href="{% url 'export-csv' %}" class="btn btn-secondary">Export CSV</a>
+        
+        <a href="{% url 'export-pdf' %}" class="btn btn-primary">{% trans "Export PDF" %}</a>
+        <a href="{% url 'export-excel' %}" class="btn btn-primary">{% trans "Export Excel" %}</a>
+        <a href="{% url 'export-csv' %}" class="btn btn-secondary">{% trans "Export CSV" %}</a>
 
         <div class="form-group">
           <input type="text" class="form-control" id="searchField" placeholder="Search">
@@ -53,9 +72,9 @@
     <thead>
       <tr>
         <th>Amount ({{currency}})</th>
-        <th>Category</th>
-        <th>Description</th>
-        <th>Date</th>
+        <th>{% trans "Category" %}</th>
+        <th>{% trans "Description" %}</th>
+        <th>{% trans "Date" %}</th>
         <th></th>
       </tr>
     </thead>
@@ -72,7 +91,7 @@
           <a
             href="{% url 'expense-edit' expense.id  %}"
             class="btn btn-secondary btn-sm"
-            >Edit</a
+            >{% trans "Edit" %}</a
           >
         </td>
       </tr>
@@ -82,7 +101,7 @@
   </table>
 </div>
 
-<p class="no-results" style="display: none;">No results </p>
+<p class="no-results" style="display: none;">{% trans "No results" %} </p>
     <div class="table-output">
 
 
@@ -90,10 +109,10 @@
         <thead>
           <tr>
             <th>Amount ({{currency}})</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th></th>
+             <th>{% trans "Category" %}</th>
+          <th>{% trans "Description" %}</th>
+          <th>{% trans "Date" %}</th>
+          <th></th>
           </tr>
         </thead>
 
@@ -107,25 +126,59 @@
 
 
 
-    <div class="pagination-container">
+    <!--<div class="pagination-container">
     <div class="">
       Showing page {{page_obj.number}} of {{ page_obj.paginator.num_pages }}
     </div>
     <ul class="pagination align-right float-right mr-auto">
       {% if page_obj.has_previous %}
       <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}><a class="page-link" href="?page=1">&laquo; 1</a></li>
-      <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a></li>
       {% endif %}
 
       {% if page_obj.has_next %}
-      <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a></li>
       <li class="page-item"> <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages}} &raquo;</a></li>
       {% endif %}
 
 
       </ul>
     {% endif %}
-  </div>
+  </div>-->
+
+<div class="pagination-container">
+    <div class="">
+        Showing page {{page_obj.number}} of {{ page_obj.paginator.num_pages }}
+    </div>
+    <ul class="pagination align-right float-right mr-auto">
+        {% if page_obj.has_previous %}
+            <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}>
+                <a class="page-link" href="?page=1&orderOption={{ request.GET.orderOption }}">&laquo; 1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&orderOption={{ request.GET.orderOption }}">
+                    {% trans "Previous" %}
+                </a>
+            </li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&orderOption={{ request.GET.orderOption }}">
+                    {% trans "Next" %}
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&orderOption={{ request.GET.orderOption }}">
+                    {{ page_obj.paginator.num_pages }} &raquo;
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+
+
+
 </div>
 </div>
 
@@ -171,6 +224,11 @@
 </script>
 
 
-
+<script>
+    // Add an event listener to the dropdown to submit the form on change
+    document.getElementById('orderOption').addEventListener('change', function() {
+        document.getElementById('sortingForm').submit();
+    });
+</script>
 
 {% endblock content %}

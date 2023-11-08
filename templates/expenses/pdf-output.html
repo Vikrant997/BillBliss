@@ -1,11 +1,11 @@
-
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>PDF Output</title>
+        <title>{% trans "PDF Output" %}</title>
         <style>
            @page{
             size: "A4";
@@ -25,12 +25,12 @@
         <h1>
         <img src="{% static 'static/img/logo.png' %}" width="35" height="35"/>
         </h1>
-        <h2>Expense List</h2>
+        <h2>{% trans "Expense List" %}</h2>
 
         <table class="table">
             <thead class="thead">
                 <tr>
-                    <th>No.</th>
+                    <th>{% trans "No." %}</th>
                     <th>Amount</th>
                     <th>Category</th>
                     <th>Description</th>
@@ -52,10 +52,11 @@
                 {% endfor %}
 
                 <tr>
-                    <td>Total</td>
+                    <td>{% trans "Total" %}</td>
                     <td>{{total}}</td>
                 </tr>
             </tbody>
         </table>
+        
     </body>
 </html>

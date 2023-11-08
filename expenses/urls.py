@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.views.decorators.csrf import csrf_exempt
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('', views.index, name = "expenses"),
@@ -15,4 +16,9 @@ urlpatterns = [
     path('export_pdf', csrf_exempt(views.export_pdf), name = "export-pdf"),
     path('other_page', views.index, name = "other_page"),
     path('check_budget_status/', views.check_budget_status, name='check_budget_status'),
+
+    path('change-language/', views.change_language, name='change_language'),
+    path('index/', views.index, name='index'),
+    
+
 ]

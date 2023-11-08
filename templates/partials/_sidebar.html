@@ -1,36 +1,29 @@
+{% load i18n %}
 {% load static %}
+
+
+
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
       <li class="nav-item">
         <a class="nav-link active" href="#">
           <span data-feather="home"></span>
-          Dashboard <span class="sr-only">(current)</span>
+          {% trans "Dashboard" %}  <span class="sr-only">(current)</span>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'expenses' %}">
-          Expenses
+          {% trans "Expenses" %}
         </a>
       </li>
     </ul>
 
-    <h6
-      class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
-    >
-      <span>Summary</span>
-      <a
-        class="d-flex align-items-center text-muted"
-        href="#"
-        aria-label="Add a new report"
-      >
-        <span data-feather="plus-circle"></span>
-      </a>
-    </h6>
+    
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
        <a class="nav-link" href="{% url 'stats'%}">
-          Expenses Summary
+          {% trans "Expenses Summary" %}
         </a>
       </li>
      
@@ -39,7 +32,7 @@
     <h6
       class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
     >
-      <span>Settings</span>
+      <span>{% trans "Settings" %}</span>
       <a
         class="d-flex align-items-center text-muted"
         href="#"
@@ -51,42 +44,91 @@
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
         <a class="nav-link" href="{% url 'preferences' %}">
-          General
+          {% trans "General" %}
         </a>
       </li>
-      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+    <!--  <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Account</span>
             <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
                 <span data-feather="plus-circle"></span>
             </a>
-        </h6>
+        </h6>-->
         
 
-      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Language</span>
-            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report" >
-                <span class="dropdown-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&#9662;</span>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="languageDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <a class="dropdown-item" href="#" onclick="changeLanguage('en')">English</a>
-            <a class="dropdown-item" href="#" onclick="changeLanguage('es')">Español</a>
-          </div>
-        </h6>
-
-        
-        
-
-
-
-
+        <li class="nav-item">
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>{% trans "Languages" %}</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+            <a id="changeLanguageen" class="nav-link {% if user_preferences.language == 'en' %}active{% endif %}" href="#" onclick="changeLanguage('en')">{% trans "English" %}</a>
+        </li>
+        <li class="nav-item">
+            <a id="changeLanguagesw" class="nav-link {% if user_preferences.language == 'sw' %}active{% endif %}" href="#" onclick="changeLanguage('sw')">{% trans "Swedish" %}</a>
+        </li>
     </ul>
+</li>
+
+
+      
+
+<style>
+    .nav-link.active {
+        color: blue !important; /* Change the color to blue for the active link */
+    }
+</style>
+
+      </ul>
   </div>
 </nav>
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
 <script>
-    // Example function for language change (replace it with your actual logic)
-    function changeLanguage(language) {
-        console.log('Switching language to: ' + language);
-        // Add your language-switching logic here
-    }
+function changeLanguage(language) {
+    console.log('Selected language:', language);
+
+    const formData = new FormData();
+    formData.append('language', language);
+    const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    const url = '{% url "change_language" %}?language=' + language;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrfToken,
+        },
+        body: formData,
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Language change response:', data);
+        // Add a delay of 1 second (1000 milliseconds) before reloading the page
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    })
+    .catch(error => {
+        console.error('Error changing language:', error);
+    });
+}
+
 </script>
+
+
+
+
+
