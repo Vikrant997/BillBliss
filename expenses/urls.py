@@ -19,6 +19,9 @@ urlpatterns = [
 
     path('change-language/', views.change_language, name='change_language'),
     path('index/', views.index, name='index'),
-    
+    path('test/', views.test, name = 'home'),
+    path('', views.home, name = 'home'),
+
+    path('mark_notification_as_read/<int:notification_id>/',views.mark_notification_as_read, name='mark_notification_as_read'), 
 
 ]

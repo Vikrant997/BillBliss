@@ -19,6 +19,58 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet" />
+    
+ <style>
+        .notification {
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            padding: 4px 24px;
+            margin-right: 20px;
+            margin-left: 20px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+            font-size: 20px;
+        }
+
+        .notification:hover {
+            background: #0b5ed7;
+            color: #fff;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 8px 8px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+
+        .notification-section .dropdown-toggle::after {
+            content: none;
+        }
+
+        .dropdown-toggle::after {
+            color: #fff;
+        }
+
+        #notifications-dropdown li {
+            max-width: 500px;
+            word-wrap: break-word;
+            display: inline-block;
+            white-space: normal;
+        }
+
+        #notifications-dropdown.dropdown-menu {
+            width: 15rem;
+        }
+        
+    </style>
+
+
 </head>
 
 <body>
@@ -30,7 +82,26 @@
                 <span class="nav-link" href="">{{ request.user.username }}</span>
             </li>
 
-           
+    <li class="nav-item dropdown notification-section">
+                    <a href="#" class="notification dropdown-toggle" id="navbarDropdown" role="button"
+   data-bs-toggle="dropdown" aria-expanded="false" data-bs-target="#notifications-dropdown">
+                        
+                        <span><i class='fa fa-bell'></i></span>
+                        <span class="badge" id="notification-badge">0</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notifications-dropdown"
+                        data-popper-placement="bottom-end"
+                        style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(-70px, 42px, 0px);">
+                        
+                        {% for i in notifications %}
+                        <li class="dropdown-item">{{i.message}}</li>
+                        <hr class="dropdown-divider">
+                        {% endfor %}
+                        {% comment %} <li class='dropdown-item'>Hello</li>
+                        <hr class="dropdown-divider"> {% endcomment %}
+                        
+                    </ul>
+    </li>
 
             <li class="nav-item text-nowrap mt-3 ml-2">
                 <form action="{% url 'logout' %}" method="POST">
@@ -55,11 +126,111 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     
+    {{ room_name|json_script:"room_name" }}
+    <script>
+        
+        /*const roomName = JSON.parse(document.getElementById('room-name').textContent); 
+        console.log(roomName);*/
+        const roomName = "broadcast";
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        const notificationSocket = new WebSocket(
+            ws_scheme + '://'
+            + window.location.host
+            + '/ws/notification/'
+            + roomName
+            + '/'
+        );
 
+        notificationSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+            document.getElementById("notifications-dropdown").innerHTML = "<li class='dropdown-item'>" + data + "</li><hr class='dropdown-divider'>" + document.getElementById("notifications-dropdown").innerHTML;
+            document.getElementById("notification-badge").innerHTML = parseInt(document.getElementById("notification-badge").innerHTML) + 1;
+            //document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        notificationSocket.onclose = function(e) {
+            console.error('Notification socket closed unexpectedly');
+        };
+
+
+        /*notificationSocket.onopen = function (event) {
+        console.log('WebSocket connection opened:', event);
+        notificationSocket.send('qwerty');
+        };
+
+        notificationSocket.onmessage = function (event) {
+        console.log('WebSocket message received:', event);
+        };
+
+        notificationSocket.onclose = function (event) {
+        console.error('WebSocket connection closed unexpectedly:', event);
+        };*/
+
+
+
+    </script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Reinitialize Bootstrap dropdown
+        var dropdown = new bootstrap.Dropdown(document.getElementById('navbarDropdown'));
+    });
+</script>
    
+<script>
+    document.addEventListener('click', function (event) {
+        var dropdownElement = document.getElementById('navbarDropdown');
+        var isClickInsideDropdown = dropdownElement.contains(event.target);
+        if (!isClickInsideDropdown) {
+            // Close the dropdown if the click is outside
+            var dropdown = new bootstrap.Dropdown(dropdownElement);
+            dropdown.hide();
+        }
+    });
+</script>
+
+
+<script>
+// Assuming you have jQuery available
+$(document).ready(function() {
+    $(".notification-item").on("click", function() {
+        var notificationId = $(this).data("notification-id");
+
+        // Send an AJAX request to mark the notification as read
+        $.ajax({
+            url: '/mark_notification_as_read/' + notificationId + '/',
+            type: 'GET',
+            success: function(data) {
+                console.log('AJAX Success:', data);
+
+                // Update the notification count only if the notification was not read before
+                if (!data.notification_already_read) {
+                    console.log('Updating Notification Count:', data.unread_notifications_count - 1);
+                    updateNotificationCount(data.unread_notifications_count - 1); // Decrement by 1
+                } else {
+                    console.log('Notification already read, not updating count.');
+                }
+            },
+            error: function(error) {
+                console.log('Error marking notification as read:', error);
+            }
+        });
+    });
+
+    // Function to update the notification count on the page
+    function updateNotificationCount(count) {
+       console.log('New Notification Count:', count);
+        $('#notification-badge').text(count);
+    }
+});
+</script>
+
 
 </body>
 </html>
+
 
 
 

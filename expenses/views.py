@@ -166,7 +166,7 @@ def add_expense(request):
         Expense.objects.create(owner=request.user, amount=amount, date=date,
                                category=category, description=description)
         
-
+        
         # calculates total expense
         total_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
 
@@ -463,40 +463,36 @@ def change_language(request):
 
 
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
-"""
-@csrf_exempt
-def filter_expenses(request):
-    if request.method == 'POST':
-        # Extracts the filter option and search text from the JSON data in the request body
-        data = json.loads(request.body)
-        filter_option = data.get('filterOption')
-        search_str = data.get('searchText')
-        order_option = data.get('orderOption')
+from notifications_app.models import BroadcastNotification
+def home(request):
+    
+    return render(request, 'expenses/index.html',{
+        'room_name': "broadcast"
+    })
 
-        # Define a dictionary to map filter options to corresponding fields in the Expense model
-        filter_mapping = {
-            'amount': 'amount__istartswith',
-            'date': 'date__istartswith',
-            'description': 'description__icontains',
-            'category': 'category__icontains',
-            # Add more options as needed
+def test(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+         "notification_broadcast",
+        {
+            'type': 'send_notification',
+            'message': json.dumps("Notification")
         }
+    )
+    return HttpResponse("Done")
 
-        # Perform the filtering based on the selected filter option
-        expenses = Expense.objects.filter(
-            **{filter_mapping.get(filter_option, 'date__istartswith'): search_str},
-            owner=request.user
-        )
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
-        # Apply ordering based on the order option
-        if order_option == 'increasing':
-            expenses = expenses.order_by(Coalesce(F(filter_option), Value('')))
-        elif order_option == 'decreasing':
-            expenses = expenses.order_by(Coalesce(F(filter_option).desc(), Value('')))
-
-        # Retrieve the values of the filtered expenses
-        data = expenses.values()
-
-        # Convert the QuerySet of dictionaries into a JSON response
-        return JsonResponse(list(data), safe=False)"""
+def mark_notification_as_read(request, notification_id):
+    print('Marking notification as read. ID:', notification_id)
+    
+    notification = get_object_or_404(BroadcastNotification, pk=notification_id)
+    notification.is_read = True
+    notification.save()
+    
+    print('Notification marked as read. ID:', notification_id)
+    return JsonResponse({'success': True, 'notification_already_read': notification.is_read})

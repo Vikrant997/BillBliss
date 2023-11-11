@@ -27,3 +27,4 @@ def set_default_language_on_startup(sender, **kwargs):
             else:
                 print(f"User already has a language preference: {user.username}")"""
 
+

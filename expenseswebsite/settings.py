@@ -40,10 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication',
     'expenses',
     'userpreferences',
     'translation_manager',
-   
+    'notifications_app',
+    'channels',
+    'django_celery_beat',
+    'django_celery_results',
    
 ]
 
@@ -74,13 +78,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'expenses.custom_context_processors.notifications'
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'expenseswebsite.wsgi.application'
-
+ASGI_APPLICATION = 'expenseswebsite.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -171,3 +177,22 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'viki0999viki@gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'btxmqydrqfbonvtc'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+# CELERY SETTINGS
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SELERLIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

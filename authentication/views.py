@@ -181,7 +181,7 @@ class LoginView(View):
                 if user.is_active:
                     auth.login(request, user)
                     messages.success(request, 'Welcome, ' +user.username+' you are now logged in')
-                    return redirect('expenses')
+                    return redirect('preferences')
                 
                 # If user has not activated using activation link
                 messages.error(
