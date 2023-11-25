@@ -1,6 +1,9 @@
+<!--add expenses page-->
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+
+<!--form consisting of amount, category, description and date-->
 {% block content %}
 <head><script src="{% static 'js/language.js' %}"></script></head>
 <div class="container mt-4">
@@ -79,7 +82,7 @@
 </div>
 
  <script>
-    // JavaScript to toggle the visibility of the text input based on user selection
+    // JavaScript to toggle the visibility of the text input for addng custom category 
     document.getElementById('category-dropdown').addEventListener('change', function () {
         var customCategoryInput = document.getElementById('custom-category-input');
         if (this.value === 'custom') {

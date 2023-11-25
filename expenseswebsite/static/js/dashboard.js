@@ -1,29 +1,36 @@
-const renderDashboardChart = (totalExpenses, budget, difference) => {
+const renderDashboardChart = (budget, totalExpenses, difference) => {
     const ctx = document.getElementById('myDashboardChart').getContext('2d');
     
     // Set the size explicitly within the options
     const options = {
         responsive: true,
         maintainAspectRatio: false, // This line allows you to control the size
+        scales: {
+            y: {
+                 suggestedMin: 0, // Set the suggested minimum value for the y-axis to 0
+            },
+        },
+    
     };
 
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Total Expenses', 'Budget', 'Difference'],
+            labels: ['Budget', 'Spent', 'Remaining limit'],
             datasets: [{
-                label: 'Expense vs Budget',
-                data: [totalExpenses, budget, difference],
+                label: 'Spent vs Budget',
+                data: [budget, totalExpenses, difference],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
+                'rgba(0, 0, 139, 0.65)',  // Dark Blue
+                'rgba(139, 0, 0, 0.8)',  // Dark Red
+                'rgba(0, 100, 0, 0.8)',  // Dark Green
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
+                'rgba(0, 0, 139, 0.65)',  // Dark Blue
+                'rgba(139, 0, 0, 0.8)',  // Dark Red
+                'rgba(0, 100, 0, 0.8)',  // Dark Green
                 ],
+
                 borderWidth: 1,
             }],
         },

@@ -1,9 +1,11 @@
+<!-- for login feature-->
+
 {% extends 'base_auth.html' %}
 {% load static %}
 
 
 {% block content %}
-
+<!-- form having username and password as fields and a button to submit-->
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4">
@@ -39,6 +41,8 @@
           </div>
           <input type="submit" value="Login" class="btn btn-block btn-primary submit-btn" />
         </form>
+
+        <!--forgot password feature and register option-->
 <div class="container">
         <span class="text-lead lead">Don't have an account?</span><a href="{% url 'register' %}">Register</a>
         <br>

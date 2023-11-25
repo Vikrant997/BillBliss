@@ -1,8 +1,9 @@
+<!--expense page-->
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
 
-
+<!--consist of expense list, order by field, exporting options, add expense button and search feature-->
 
 {% block content %}
 <div class="container mt-4">
@@ -146,6 +147,8 @@
     {% endif %}
   </div>-->
 
+  <!--for implementing pagination-->
+
 <div class="pagination-container">
     <div class="">
         Showing page {{page_obj.number}} of {{ page_obj.paginator.num_pages }}
@@ -188,7 +191,8 @@
 
 
 </script>
-<!-- templates/expenses/index.html -->
+
+<!--for displayng budget exceeding message on expenses page-->
 <script>
   function checkBudgetStatus() {
     fetch('{% url "check_budget_status" %}')

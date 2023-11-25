@@ -520,6 +520,7 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', context)
 
+#dashboard graph
 def dashboard_json(request):
     total_user_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
     user_budget = UserPreference.objects.get(user=request.user).budget
