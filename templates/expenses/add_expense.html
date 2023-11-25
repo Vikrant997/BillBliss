@@ -7,10 +7,10 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="{% url 'expenses'%}">{% trans "Expenses" %}</a>
+        <a href="{% url 'expenses'%}">Expenses</a>
         
       </li>
-      <li class="breadcrumb-item active" aria-current="page">{% trans "Add Expenses" %}</li>
+      <li class="breadcrumb-item active" aria-current="page">Add Expenses</li>
     </ol>
   </nav>
 
@@ -19,7 +19,7 @@
       <form action="{% url 'add-expenses' %}" method="post">
         {% include 'partials/_messages.html'%} {% csrf_token %}
         <div class="form-group">
-          <label for="">{% trans "Amount" %}</label>
+          <label for="">Amount</label>
           <input
             type="text"
             class="form-control form-control-sm"
@@ -28,7 +28,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="">{% trans "Description" %}</label>
+          <label for="">Description</label>
           <input
             type="text"
             class="form-control form-control-sm"
@@ -49,18 +49,18 @@
         </div>-->
 
         <div class="form-group">
-    <label for="">{% trans "Category" %}</label>
+    <label for="">Category</label>
     <select class="form-control" name="category" id="category-dropdown">
         {% for category in categories %}
             <option value="{{ category.name }}">{{ category.name }}</option>
         {% endfor %}
-        <option value="custom">{% trans "Enter Custom Category" %}</option>
+        <option value="custom">Enter Custom Category</option>
     </select>
     <input type="text" class="form-control mt-2" name="custom_category" id="custom-category-input" style="display: none;">
 </div>
 
         <div class="form-group">
-          <label for="">{% trans "Date of Expense" %}</label>
+          <label for="">Date of Expense</label>
           <input
             type="date"
             class="form-control form-control-sm"

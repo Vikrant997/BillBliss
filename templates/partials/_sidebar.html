@@ -7,14 +7,15 @@
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" href="#">
+        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'dashboard' %}">
           <span data-feather="home"></span>
-          {% trans "Dashboard" %}  <span class="sr-only">(current)</span>
+          Dashboard<span class="sr-only">(current)</span>
+          
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'expenses' %}">
-          {% trans "Expenses" %}
+        <a class="nav-link {% if request.path == '/expenses/' %}active{% endif %}" href="{% url 'expenses' %}">
+          Expenses
         </a>
       </li>
     </ul>
@@ -23,7 +24,7 @@
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
        <a class="nav-link" href="{% url 'stats'%}">
-          {% trans "Expenses Summary" %}
+          Expenses Summary
         </a>
       </li>
      
@@ -32,7 +33,7 @@
     <h6
       class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
     >
-      <span>{% trans "Settings" %}</span>
+      <span>Settings</span>
       <a
         class="d-flex align-items-center text-muted"
         href="#"
@@ -44,7 +45,7 @@
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
         <a class="nav-link" href="{% url 'preferences' %}">
-          {% trans "General" %}
+          General
         </a>
       </li>
     <!--  <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -129,7 +130,20 @@ function changeLanguage(language) {
 
 </script>-->
 
+<script>
+    // Get the current path of the page
+    var currentPath = window.location.pathname;
 
+    // Add the 'active' class to the corresponding link
+    document.addEventListener('DOMContentLoaded', function () {
+        var navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(function (link) {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
 
 
 

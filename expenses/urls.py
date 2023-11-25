@@ -22,6 +22,9 @@ urlpatterns = [
     path('test/', views.test, name = 'home'),
     path('', views.home, name = 'home'),
 
-    path('mark_notification_as_read/<int:notification_id>/',views.mark_notification_as_read, name='mark_notification_as_read'), 
+    path('mark_notification_as_read/<int:notification_id>/',views.mark_notification_as_read, name='mark_notification_as_read'),
+
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard-json/', views.dashboard_json, name='dashboard_json'), 
 
 ]

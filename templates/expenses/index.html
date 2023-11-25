@@ -11,17 +11,17 @@
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="">{% trans "Expenses" %}</a>
+            <a href="">Expenses</a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
-            {% trans "My Expenses" %}
+            My Expenses
           </li>
         </ol>
       </nav>
     </div>
 
     <div class="col-md-2">
-      <a href="{% url 'add-expenses'%}" class="btn btn-primary">{% trans "Add Expense" %}</a>
+      <a href="{% url 'add-expenses'%}" class="btn btn-primary">Add Expense</a>
     </div>
   </div>
 
@@ -29,7 +29,7 @@
     {% include 'partials/_messages.html' %} {% if expenses.count %}
 <div id="budget-exceeded-message" {% if not budget_exceeded %}style="display: none;"{% endif %}>
     <div class="alert alert-warning" role="alert">
-      {% trans "Warning: Total expenses exceed the budget!" %}
+      Warning: Total expenses exceed the budget!
     </div>
   </div>
     <div class="row">
@@ -38,15 +38,15 @@
  <div class="col-md-3 text-left">
     <form method="get" action="{% url 'index' %}" id="sortingForm">
     <div class="form-group">
-        <label for="orderOption">{% trans "Order by:" %}</label>
+        <label for="orderOption">Order by:</label>
         <select class="form-control" id="orderOption" name="orderOption">
             <!-- Add options for increasing and decreasing -->
-            <option value="amount_increasing">{% trans "Amount Increasing" %}</option>
-            <option value="amount_decreasing">{% trans "Amount Decreasing" %}</option>
-            <option value="date_increasing" selected>{% trans "Date Increasing" %}</option>
-            <option value="date_decreasing">{% trans "Date Decreasing" %}</option>
-            <option value="category_increasing">{% trans "Category Increasing" %}</option>
-            <option value="category_decreasing">{% trans "Category Decreasing" %}</option>
+            <option value="amount_increasing">Amount Increasing</option>
+            <option value="amount_decreasing">Amount Decreasing</option>
+            <option value="date_increasing" selected>Date Increasing</option>
+            <option value="date_decreasing">Date Decreasing</option>
+            <option value="category_increasing">Category Increasing</option>
+            <option value="category_decreasing">Category Decreasing</option>
         </select>
     </div>
 </form> 

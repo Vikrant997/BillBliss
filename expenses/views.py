@@ -28,7 +28,7 @@ import logging
 from django.db.models import F
 from django.db.models.functions import Coalesce
 
-
+from decimal import Decimal
 
 # This view is designed to respond to POST requests. It checks if the incoming request method is 'POST' before proceeding with the search.
 def search_expenses(request):
@@ -496,3 +496,43 @@ def mark_notification_as_read(request, notification_id):
     
     print('Notification marked as read. ID:', notification_id)
     return JsonResponse({'success': True, 'notification_already_read': notification.is_read})
+
+#dashboard implementation
+def dashboard(request):
+    
+    total_user_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
+    user_budget = UserPreference.objects.get(user=request.user).budget
+    
+    if total_user_expenses is None:
+        total_user_expenses = Decimal('0.0')
+
+    difference = user_budget - Decimal(str(total_user_expenses))
+
+    currency = UserPreference.objects.filter(user=request.user).first()
+    if currency:
+        currency = currency.currency
+    context = {
+        'total_user_expenses': total_user_expenses,
+        'user_budget': user_budget,
+        'currency': currency,
+        'difference': difference
+    }
+
+    return render(request, 'dashboard.html', context)
+
+def dashboard_json(request):
+    total_user_expenses = Expense.objects.filter(owner=request.user).aggregate(Sum('amount'))['amount__sum']
+    user_budget = UserPreference.objects.get(user=request.user).budget
+    
+    if total_user_expenses is None:
+        total_user_expenses = Decimal('0.0')
+
+    difference = user_budget - Decimal(str(total_user_expenses))
+
+    data = {
+        'total_user_expenses': str(total_user_expenses),
+        'user_budget': str(user_budget),
+        'difference': str(difference)
+    }
+
+    return JsonResponse(data)

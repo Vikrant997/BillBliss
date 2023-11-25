@@ -1,0 +1,46 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% block sidebar %}
+    {% include 'partials/_sidebar.html' %}
+{% endblock %}
+<div class="dashboard-section mt-4">
+        <h2 class="display-4">Dashboard</h2>
+        
+        <p class="lead">
+            Your Total Expense/Your Budget:
+        </p>
+        <p>
+            <span class="text-muted">{{ total_user_expenses }}</span> /
+            <span class="text-muted">{{ user_budget }}</span>
+        </p>
+</div>
+<div class="row">
+<div class="col-md-8">
+ <canvas id="myDashboardChart" width="250" height="250"></canvas>
+    </div><div class="col-md-4">
+    </div>
+
+ </div>
+</div>
+<script>
+    const getDashboardData = () => {
+        console.log("fetching dashboard data");
+        fetch("/dashboard-json/")  // Use the new endpoint for JSON data
+            .then((res) => res.json())
+            .then((results) => {
+                console.log("dashboard results", results);
+                const { total_user_expenses, user_budget, difference } = results;
+
+                renderDashboardChart(total_user_expenses, user_budget, difference);
+            });
+    };
+
+    document.onload = getDashboardData();
+</script>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock content%}
